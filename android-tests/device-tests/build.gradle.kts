@@ -28,6 +28,7 @@ android {
     packaging {
         resources {
             pickFirsts.add("logging.properties")
+            pickFirsts.add("THIRD-PARTY.txt")
             excludes.add("META-INF/jpms.args")
         }
     }
