@@ -3,6 +3,7 @@ slug: syntax-highlight
 title: 'Syntax highlighting in Java, without the pain'
 authors: [andreaTP]
 tags: [wasm, chicory, highlight, treesitter]
+unlisted: true
 ---
 
 <!-- truncate -->

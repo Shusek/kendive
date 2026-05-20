@@ -14,6 +14,7 @@ But first, read this page (including the small print at the end).
   + [Tests and documentation are not optional](#tests-and-documentation-are-not-optional)
   + [Current status](#current-status)
 * [Reporting an issue](#reporting-an-issue)
+* [AI Tool Use Policy](#ai-tool-use-policy)
 * [Legal](#legal)
 * [The small print](#the-small-print)
 
@@ -122,6 +123,10 @@ APPROVAL_TESTS_USE_REPORTER=AutoApproveReporter
 This project uses GitHub issues to manage the issues. Open an issue directly in GitHub.
 
 If you believe you found a bug, and it's likely possible, please indicate a way to reproduce it, what you are seeing and what you would expect to see.
+
+## AI Tool Use Policy
+
+This project follows the [Bytecode Alliance AI Tool Use Policy](https://github.com/bytecodealliance/governance/blob/main/AI_TOOL_POLICY.md).
 
 ## Legal
 
