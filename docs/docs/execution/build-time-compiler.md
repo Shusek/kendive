@@ -23,7 +23,7 @@ The build time compiler has several advantages over the [Runtime Compiler](runti
 - fewer runtime dependencies: asm is only needed at build time
 - distribute Wasm modules as self-contained jars: making it a convenient way to distribute software that was not originally meant to run on the Java platform
 
-You can use the compiler at build-time via Maven plug-in, Gradle plug-in, or plain CLI
+You can use the compiler at build time via the CLI or a Gradle integration.
 
 ### Interpreter Fall Back
 
@@ -37,47 +37,21 @@ WASM function size exceeds the Java method size limits and cannot be compiled to
 
 If this happens you can configure your build tool, to just issue warning messages, or to be silent.  Another way to silence the message is to configure the build too with an explicit list of functions that should be interpreted. Typically, you obtain the list of the functions by running the compiler once with `interpreterFallback` set to `WARN`
 
-## Using Maven
+## Using Generated Modules
 
-Example configuration of the Maven plug-in:
-
-```xml
-<build>
-  <plugins>
-    <plugin>
-      <groupId>run.endive</groupId>
-      <artifactId>endive-compiler-maven-plugin</artifactId>
-      <executions>
-        <execution>
-          <id>compiler-gen</id>
-          <goals>
-            <goal>compile</goal>
-          </goals>
-          <configuration>
-            <!-- Translate the Wasm binary `add` into bytecode -->
-            <wasmFile>src/main/resources/add.wasm</wasmFile>
-            <!-- Name of the generated class to be used -->
-            <name>org.acme.wasm.Add</name>
-          </configuration>
-        </execution>
-      </executions>
-    </plugin>
-  </plugins>
-</build>
-```
-
-In the codebase you can use the generated module by configuring appropriately the `MachineFactory`:
+The build-time compiler emits a module class with `load` and `create` helpers.
+Use the generated module by configuring the `MachineFactory`:
 
 <!--
 ```java
-//DEPS run.endive:docs-lib:999-SNAPSHOT
-//DEPS run.endive:runtime:999-SNAPSHOT
+//DEPS uk.shusek.krwa:docs-lib:0.3.0-SNAPSHOT
+//DEPS uk.shusek.krwa:runtime-jvm:0.3.0-SNAPSHOT
 
-import run.endive.wasm.Parser;
-import run.endive.wasm.WasmModule;
-import run.endive.runtime.Instance;
-import run.endive.runtime.Machine;
-import run.endive.runtime.InterpreterMachine;
+import uk.shusek.krwa.wasm.Parser;
+import uk.shusek.krwa.wasm.WasmModule;
+import uk.shusek.krwa.runtime.Instance;
+import uk.shusek.krwa.runtime.Machine;
+import uk.shusek.krwa.runtime.InterpreterMachine;
 
 docs.FileOps.copyFromWasmCorpus("count_vowels.rs.wasm", "your.wasm");
 
@@ -97,7 +71,7 @@ class Add {
 -->
 
 ```java
-import run.endive.runtime.Instance;
+import uk.shusek.krwa.runtime.Instance;
 
 // load the bundled module
 var module = Add.load();
@@ -113,14 +87,12 @@ var instance = Instance.builder(module).
 The build-time compiler can also generate typed Java wrappers for a module's exports and imports,
 eliminating the need for the [`@WasmModuleInterface` annotation](../annotations/index.md#wasmmoduleinterface) and the annotation processor setup.
 
-Add the `moduleInterface` parameter to the plugin configuration:
+Set the `moduleInterface` parameter when invoking the compiler:
 
-```xml
-<configuration>
-  <wasmFile>src/main/resources/demo.wasm</wasmFile>
-  <name>org.acme.wasm.DemoModule</name>
-  <moduleInterface>org.acme.wasm.Demo</moduleInterface>
-</configuration>
+```text
+wasmFile = src/main/resources/demo.wasm
+name = org.acme.wasm.DemoModule
+moduleInterface = org.acme.wasm.Demo
 ```
 
 This generates `Demo_ModuleExports` and `Demo_ModuleImports` classes alongside the compiled module.
@@ -128,14 +100,14 @@ You can then use them directly in your code without any annotation:
 
 <!--
 ```java
-//DEPS run.endive:docs-lib:999-SNAPSHOT
-//DEPS run.endive:runtime:999-SNAPSHOT
+//DEPS uk.shusek.krwa:docs-lib:0.3.0-SNAPSHOT
+//DEPS uk.shusek.krwa:runtime-jvm:0.3.0-SNAPSHOT
 
-import run.endive.wasm.Parser;
-import run.endive.wasm.WasmModule;
-import run.endive.runtime.Instance;
-import run.endive.runtime.Machine;
-import run.endive.runtime.InterpreterMachine;
+import uk.shusek.krwa.wasm.Parser;
+import uk.shusek.krwa.wasm.WasmModule;
+import uk.shusek.krwa.runtime.Instance;
+import uk.shusek.krwa.runtime.Machine;
+import uk.shusek.krwa.runtime.InterpreterMachine;
 
 docs.FileOps.copyFromWasmCorpus("count_vowels.rs.wasm", "demo.wasm");
 
@@ -165,89 +137,42 @@ var instance = Instance.builder(DemoModule.load()).
 var exports = new Demo_ModuleExports(instance);
 ```
 
-### The `compile` Goal
+### Compile Parameters
 
-You can obtain the full description of the Maven Plugin with a command like:
-`mvn help:describe -DgroupId=run.endive -DartifactId=endive-compiler-maven-plugin -Dversion=999-SNAPSHOT -Ddetail`
+```text
+    <wasm file>
+      Positional argument. The Wasm module to compile.
 
-```
-endive:compile
-  Description: This plugin generates an invokable library from the compiled
-    Wasm
-  Implementation: run.endive.build.time.maven.EndiveCompilerGenMojo
-  Language: java
-  Bound to phase: generate-sources
+    --prefix (Default: uk.shusek.krwa.Wasm)
+      The package and class-name prefix to use for generated resources.
 
-  Available parameters:
+    --source-dir (Default: .)
+      The target folder for generated source files.
 
-    interpretedFunctions
-      The indexes of functions that should be interpreted, separated by commas
+    --class-dir (Default: .)
+      The target folder for generated class files.
 
-    interpreterFallback (Default: FAIL)
-      Required: true
-      the action to take if the compiler needs to use the interpreter because a
-      function is too big
+    --wasm-dir (Default: .)
+      The target folder for the stripped meta Wasm module.
 
-    moduleInterface
+    --interpreter-fallback (Default: FAIL)
+      Action to take if the compiler needs to use the interpreter because a
+      function is too big.
+
+    --interpreted-functions
+      The indexes of functions that should be interpreted, separated by commas.
+
+    --module-interface
       Fully qualified name of the user's class for which to generate
       _ModuleExports and _ModuleImports wrapper classes. When set, eliminates
       the need for @WasmModuleInterface annotation and the annotation processor.
-
-    name
-      Required: true
-      the base name to be used for the generated classes
-
-    targetClassFolder (Default:
-    ${project.build.directory}/generated-resources/endive-compiler)
-      Required: true
-      the target folder to generate classes
-
-    targetSourceFolder (Default:
-    ${project.build.directory}/generated-sources/endive-compiler)
-      Required: true
-      the target source folder to generate the Machine implementation
-
-    targetWasmFolder (Default:
-    ${project.build.directory}/generated-resources/endive-compiler)
-      Required: true
-      the target wasm folder to generate the stripped meta wasm module
-
-    wasmFile
-      Required: true
-      the wasm module to be used
-```
-
-#### IDE shortcomings
-
-In some IDEs the sources generated under the standard folder `target/generated-sources` are not automatically recognized.
-To overcome this limitation you can use an additional Maven Plugin for a smoother IDE experience:
-
-```xml
-<plugin>
-    <groupId>org.codehaus.mojo</groupId>
-    <artifactId>build-helper-maven-plugin</artifactId>
-    <executions>
-        <execution>
-        <id>addSource</id>
-        <phase>generate-sources</phase>
-        <goals>
-            <goal>add-source</goal>
-        </goals>
-        <configuration>
-            <sources>
-                <source>${project.build.directory}/generated-sources/endive-compiler</source>
-            </sources>
-        </configuration>
-        </execution>
-    </executions>
-</plugin>
 ```
 
 ## Using Gradle [community]
 
 Gradle users can leverage the [wasm2class-gradle-plugin](https://github.com/illarionov/wasm2class-gradle-plugin),
-a third-party plugin that serves as an alternative to the Maven plugin, running the AoT compiler at build time
-and enabling the use of pre-compiled Wasm code in Java, Kotlin, and Android projects.
+a third-party plugin that runs the AoT compiler at build time and enables the
+use of pre-compiled Wasm code in Java, Kotlin, and Android projects.
 
 To set it up, make sure MavenCentral is listed as a repository in the `pluginManagement` block of your `settings.gradle.kts`:
 
@@ -280,8 +205,8 @@ wasm2class {
 }
 ```
 
-This generates the class `org.acme.wasm.Add`, which you can use to instantiate the module just like shown earlier
-in the Maven example.
+This generates the class `org.acme.wasm.Add`, which you can use to instantiate
+the module just like shown earlier.
 
 <!--
 ```java

@@ -7,18 +7,18 @@ title: Memory
 
 Wasm only understands basic integer and float primitives.
 Passing more complex types across the boundaries involves passing low level pointers.
-To read, write, or allocate memory in a module, Endive provides the `Memory` class.
+To read, write, or allocate memory in a module, Kotlin Runtime Web Assembly provides the `Memory` class.
 Let's look at an example where we have a module `count_vowels.wasm`, written in Rust, that takes a string input and counts the number of vowels
 in the string:
 
 ```bash
-curl https://raw.githubusercontent.com/bytecodealliance/endive/main/wasm-corpus/src/main/resources/compiled/count_vowels.rs.wasm > count_vowels.wasm
+curl https://raw.githubusercontent.com/Shusek/kotlin-runtime-web-assembly/main/testing/wasm-corpus/src/main/resources/compiled/count_vowels.rs.wasm > count_vowels.wasm
 ```
 
 <!--
 ```java
-//DEPS run.endive:docs-lib:999-SNAPSHOT
-//DEPS run.endive:runtime:999-SNAPSHOT
+//DEPS uk.shusek.krwa:docs-lib:0.3.0-SNAPSHOT
+//DEPS uk.shusek.krwa:runtime-jvm:0.3.0-SNAPSHOT
 
 docs.FileOps.copyFromWasmCorpus("count_vowels.rs.wasm", "count_vowels.wasm");
 ```
@@ -27,9 +27,9 @@ docs.FileOps.copyFromWasmCorpus("count_vowels.rs.wasm", "count_vowels.wasm");
 Build and instantiate this module:
 
 ```java
-import run.endive.runtime.ExportFunction;
-import run.endive.runtime.Instance;
-import run.endive.wasm.Parser;
+import uk.shusek.krwa.runtime.ExportFunction;
+import uk.shusek.krwa.runtime.Instance;
+import uk.shusek.krwa.wasm.Parser;
 
 Instance instance = Instance.builder(Parser.parse(new File("./count_vowels.wasm"))).build();
 ExportFunction countVowels = instance.export("count_vowels");
@@ -46,7 +46,7 @@ ExportFunction dealloc = instance.export("dealloc");
 Let's allocate Wasm memory for a string and write it into the instance memory:
 
 ```java
-import run.endive.runtime.Memory;
+import uk.shusek.krwa.runtime.Memory;
 
 Memory memory = instance.memory();
 String message = "Hello, World!";

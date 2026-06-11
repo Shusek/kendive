@@ -10,9 +10,9 @@ title: Runtime Compiler Cache
 The directory cache stores compiled bytecode on disk without integrity verification. Ensure the cache directory has restrictive permissions (`chmod 700`) and is not writable by untrusted users. Do not share caches across trust boundaries.
 :::
 
-The runtime compiler cache lets the Endive runtime compiler store the results of compiling WASM modules to Java bytecode. Subsequent executions can skip compilation and start faster.
+The runtime compiler cache lets the Kotlin Runtime Web Assembly runtime compiler store the results of compiling WASM modules to Java bytecode. Subsequent executions can skip compilation and start faster.
 
-Use the experimental directory-based cache, or implement the simple `run.endive.compiler.Cache` interface:
+Use the experimental directory-based cache, or implement the simple `uk.shusek.krwa.compiler.Cache` interface:
 
 ```java
 public interface Cache {
@@ -44,15 +44,14 @@ The implementation uses file system atomic moves (write to a temp file, then mov
 
 We assume you already use the runtime compiler. If not, see the [Runtime Compiler](../execution/runtime-compiler) guide first.
 
-### Add the Maven Dependency
+### Add the Gradle Dependency
 
 Add the following dependency:
 
-```xml
-<dependency>
-  <groupId>run.endive</groupId>
-  <artifactId>dircache-experimental</artifactId>
-</dependency>
+```kotlin
+dependencies {
+    implementation("uk.shusek.krwa:dircache-experimental")
+}
 ```
 
 ### Code
@@ -61,14 +60,14 @@ Create the cache:
 
 <!--
 ```java
-//DEPS run.endive:docs-lib:999-SNAPSHOT
-//DEPS run.endive:compiler:999-SNAPSHOT
-//DEPS run.endive:dircache-experimental:999-SNAPSHOT
+//DEPS uk.shusek.krwa:docs-lib:0.3.0-SNAPSHOT
+//DEPS uk.shusek.krwa:compiler:0.3.0-SNAPSHOT
+//DEPS uk.shusek.krwa:dircache-experimental:0.3.0-SNAPSHOT
 ```
 -->
 ```java
 import java.nio.file.Path;
-import run.endive.experimental.dircache.DirectoryCache;
+import uk.shusek.krwa.experimental.dircache.DirectoryCache;
 
 var cache = new DirectoryCache(Path.of("cache"));
 ```
@@ -79,10 +78,10 @@ Configure the compiler to use the cache via `MachineFactoryCompiler.builder(...)
 ```java
 import java.io.File;
 import java.nio.file.Files;
-import run.endive.compiler.MachineFactoryCompiler;
-import run.endive.wasm.Parser;
-import run.endive.wasm.WasmModule;
-import run.endive.runtime.Instance;
+import uk.shusek.krwa.compiler.MachineFactoryCompiler;
+import uk.shusek.krwa.wasm.Parser;
+import uk.shusek.krwa.wasm.WasmModule;
+import uk.shusek.krwa.runtime.Instance;
 docs.FileOps.copyFromWasmCorpus("count_vowels.rs.wasm", "your.wasm");
 
 var cache = new DirectoryCache(Files.createTempDirectory("cache"));
@@ -100,7 +99,7 @@ var instance = Instance.builder(module).
 
 <!--
 ```java
-//DEPS run.endive:docs-lib:999-SNAPSHOT
+//DEPS uk.shusek.krwa:docs-lib:0.3.0-SNAPSHOT
 docs.FileOps.writeResult("docs/execution", "compiler-cache.md.result", "empty");
 ```
 -->

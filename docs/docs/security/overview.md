@@ -6,7 +6,7 @@ title: Security Model
 
 # Security Model
 
-Endive executes WebAssembly modules inside the JVM. Understanding the security boundaries is essential when running untrusted code.
+Kotlin Runtime Web Assembly executes WebAssembly modules inside the JVM. Understanding the security boundaries is essential when running untrusted code.
 
 ## The Wasm Sandbox
 
@@ -30,7 +30,7 @@ WebAssembly provides a sandboxed execution environment by design:
 |  - - - - | - trust boundary  - | - - - - - -  |
 |          |                     |               |
 |  +-------v---------------------v--------+      |
-|  |          Endive Runtime              |      |
+|  |          Kotlin Runtime Web Assembly Runtime              |      |
 |  |                                      |      |
 |  |   +----------+    +----------+       |      |
 |  |   | Wasm     |    | Wasm     |       |      |
@@ -57,11 +57,11 @@ When using WASI, the host controls what capabilities the guest receives:
 - **Environment variables** and **command-line arguments** are explicitly passed by the host.
 - **Standard I/O** streams are host-controlled.
 
-See [Best Practices](/docs/security/best-practices) for actionable guidance on securing your Endive deployment.
+See [Best Practices](/docs/security/best-practices) for actionable guidance on securing your Kotlin Runtime Web Assembly deployment.
 
 <!--
 ```java
-//DEPS run.endive:docs-lib:999-SNAPSHOT
+//DEPS uk.shusek.krwa:docs-lib:0.3.0-SNAPSHOT
 
 docs.FileOps.writeResult("docs/security", "overview.md.result", "empty");
 ```

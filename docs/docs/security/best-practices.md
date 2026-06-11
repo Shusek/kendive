@@ -6,7 +6,7 @@ title: Security Best Practices
 
 # Security Best Practices
 
-Practical guidance for running Wasm modules securely with Endive.
+Practical guidance for running Wasm modules securely with Kotlin Runtime Web Assembly.
 
 ## Writing Safe Host Functions
 
@@ -85,14 +85,14 @@ The runtime and build-time compilers translate Wasm to JVM bytecode for performa
 
 ## Dependency Supply Chain
 
-- All Endive dependencies are checked against the [Bytecode Alliance allowed license list](/docs/security/overview) in CI
+- All Kotlin Runtime Web Assembly dependencies are checked against the allowed dependency license list in CI
 - Dependency vulnerabilities are scanned nightly via OWASP Dependency-Check
 - Dependabot is enabled for automated security updates
 - All dependency updates are manually reviewed before merging
 
 <!--
 ```java
-//DEPS run.endive:docs-lib:999-SNAPSHOT
+//DEPS uk.shusek.krwa:docs-lib:0.3.0-SNAPSHOT
 
 docs.FileOps.writeResult("docs/security", "best-practices.md.result", "empty");
 ```

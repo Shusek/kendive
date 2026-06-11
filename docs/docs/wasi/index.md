@@ -11,9 +11,9 @@ WASI file access does not enforce path sandboxing by default. Always use a virtu
 
 <!--
 ```java
-//DEPS run.endive:wasi:999-SNAPSHOT
+//DEPS uk.shusek.krwa:wasi-jvm:0.3.0-SNAPSHOT
 //DEPS com.google.jimfs:jimfs:1.3.0
-//DEPS run.endive:docs-lib:999-SNAPSHOT
+//DEPS uk.shusek.krwa:docs-lib:0.3.0-SNAPSHOT
 ```
 -->
 
@@ -34,7 +34,7 @@ Add the dependency to your build:
 
 ```xml
 <dependency>
-  <groupId>run.endive</groupId>
+  <groupId>uk.shusek.krwa</groupId>
   <artifactId>wasi</artifactId>
   <version>latest-release</version>
 </dependency>
@@ -55,7 +55,7 @@ In order to instantiate a WASI module you need an instance of `WasiPreview1`.
 For instance, download the following example from the link or with curl:
 
 ```bash
-curl https://raw.githubusercontent.com/bytecodealliance/endive/main/wasm-corpus/src/main/resources/compiled/hello-wasi.wat.wasm > hello-wasi.wasm
+curl https://raw.githubusercontent.com/Shusek/kotlin-runtime-web-assembly/main/testing/wasm-corpus/src/main/resources/compiled/hello-wasi.wat.wasm > hello-wasi.wasm
 ```
 
 <!--
@@ -65,11 +65,11 @@ docs.FileOps.copyFromWasmCorpus("hello-wasi.wat.wasm", "hello-wasi.wasm");
 -->
 
 ```java
-import run.endive.log.SystemLogger;
-import run.endive.wasi.WasiOptions;
-import run.endive.wasi.WasiPreview1;
-import run.endive.wasm.Parser;
-import run.endive.runtime.Store;
+import uk.shusek.krwa.log.SystemLogger;
+import uk.shusek.krwa.wasi.WasiOptions;
+import uk.shusek.krwa.wasi.WasiPreview1;
+import uk.shusek.krwa.wasm.Parser;
+import uk.shusek.krwa.runtime.Store;
 
 import java.io.File;
 
@@ -85,19 +85,19 @@ store.instantiate("hello-wasi", Parser.parse(new File("hello-wasi.wasm")));
 ```
 
 > **Note**: Notice that we don't explicitly execute the module. The module will run when you instantiate it. This
-> is part of the WASI spec. A WASI module will implicitly call [`_start`](https://webassembly.github.io/spec/core/syntax/modules.html#start-function). To learn more [read this blog post](https://endive.run/historical-blog/wasi-command-reactor).
+> is part of the WASI spec. A WASI module will implicitly call [`_start`](https://webassembly.github.io/spec/core/syntax/modules.html#start-function).
 
 ### stdin, stdout, and stderr
 
 To start with, you want to orchestrate stdin, stdout, and stderr of the module.
-Often, this is the way you communicate with basic WASI-enabled modules by way of the [command pattern](https://endive.run/historical-blog/wasi-command-reactor).
+Often, this is the way you communicate with basic WASI-enabled modules by way of the command pattern.
 In order to make it easy to manipulate these streams, we expose stdin as an [InputStream](https://docs.oracle.com/javase/8/docs/api/java/io/InputStream.html)
 and stdout/stderr as an [OutputStream](https://docs.oracle.com/javase/8/docs/api/java/io/OutputStream.html).
 
 Download from the link or with curl:
 
 ```bash
-curl https://raw.githubusercontent.com/bytecodealliance/endive/main/wasm-corpus/src/main/resources/compiled/greet-wasi.rs.wasm > greet-wasi.wasm
+curl https://raw.githubusercontent.com/Shusek/kotlin-runtime-web-assembly/main/testing/wasm-corpus/src/main/resources/compiled/greet-wasi.rs.wasm > greet-wasi.wasm
 ```
 
 <!--
@@ -107,8 +107,8 @@ docs.FileOps.copyFromWasmCorpus("greet-wasi.rs.wasm", "greet-wasi.wasm");
 -->
 
 ```java
-// Let's create a fake stdin stream with the bytes "Endive"
-var fakeStdin = new ByteArrayInputStream("Endive".getBytes());
+// Let's create a fake stdin stream with the bytes "Kotlin Runtime Web Assembly"
+var fakeStdin = new ByteArrayInputStream("Kotlin Runtime Web Assembly".getBytes());
 // We will create two output streams to capture stdout and stderr
 var fakeStdout = new ByteArrayOutputStream();
 var fakeStderr = new ByteArrayOutputStream();
@@ -124,7 +124,7 @@ store.instantiate("hello-wasi", Parser.parse(new File("greet-wasi.wasm")));
 
 
 // check that we output the greeting
-assert(fakeStdout.toString().equals("Hello, Endive!"));
+assert(fakeStdout.toString().equals("Hello, Kotlin Runtime Web Assembly!"));
 // there should be no bytes in stderr!
 assert(fakeStderr.toString().equals(""));
 ```
@@ -185,7 +185,7 @@ import com.google.common.jimfs.Jimfs;
 try (FileSystem fs = Jimfs.newFileSystem(Configuration.unix().toBuilder().setAttributeViews("unix").build())) {
     Path source = Path.of("my-source");
     Path target = fs.getPath("my-source");
-    run.endive.wasi.Files.copyDirectory(source, target);
+    uk.shusek.krwa.wasi.Files.copyDirectory(source, target);
 
     var wasi = WasiOptions.builder().withDirectory(target.toString(), target).build();
 
@@ -198,7 +198,7 @@ try (FileSystem fs = Jimfs.newFileSystem(Configuration.unix().toBuilder().setAtt
 
 If your module calls a wasi function that we don't support, or uses a feature that we don't support, we will throw a `WasmRuntimeException`.
 
-For the most up-to-date info, and to see what specific functions we support, see the [WasiPreview1.java](https://github.com/bytecodealliance/endive/blob/main/wasi/src/main/java/run/endive/wasi/WasiPreview1.java) and the following table:
+For the most up-to-date info, and to see what specific functions we support, see the [WasiPreview1.java](https://github.com/Shusek/kotlin-runtime-web-assembly/blob/main/modules/wasi/src/main/java/uk/shusek/krwa/wasi/WasiPreview1.java) and the following table:
 
 
 | WASI Function           | Supported  | Notes                                                                     |

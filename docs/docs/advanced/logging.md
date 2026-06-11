@@ -13,11 +13,11 @@ For more advanced configuration scenarios we encourage you to provide an alterna
 - [slf4j](https://www.slf4j.org/manual.html#jep264)
 - [log4j2](https://logging.apache.org/log4j/2.x/log4j-jpl.html)
 
-It's also possible to provide a custom `run.endive.log.Logger` implementation if JDK Platform Logging is not available or doesn't fit.
+It's also possible to provide a custom `uk.shusek.krwa.log.Logger` implementation if JDK Platform Logging is not available or doesn't fit.
 
 <!--
 ```java
-//DEPS run.endive:docs-lib:999-SNAPSHOT
+//DEPS uk.shusek.krwa:docs-lib:0.3.0-SNAPSHOT
 
 docs.FileOps.writeResult("docs/advanced", "logging.md.result", "empty");
 ```

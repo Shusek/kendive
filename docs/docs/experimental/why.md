@@ -5,19 +5,25 @@ title: Why
 ---
 # Why?
 
-Endive is a young project and we acknowledge that we are exploring and spearheading in many aspects the usage of Web Assembly on the JVM.
+Kotlin Runtime Web Assembly has a stable core goal, but several surfaces are
+still evolving while the Kotlin Multiplatform, WASI, and Component Model APIs
+settle.
 
-Since there is(always) some degree of experimentation going on, and we want to have feedback by the community and early users, we decide to publish also `experimental` modules; everyone is welcome to try things out and report back the experience.
+Experimental modules are published so early users can test new capabilities
+without waiting for a full release cycle. Feedback from those integrations is
+used to adjust package names, artifact names, APIs, and runtime behavior before
+the modules are promoted.
 
-Please note that if "something works" for you, its very unlikely that it will be removed completely, in most cases, expect slight public API changes or module renames to happen.
+If a feature is useful in real projects, the preferred path is to keep it and
+provide a migration path. Experimental APIs, however, are not covered by the
+same SemVer guarantees as stable modules.
 
-The goal of having `experimental` modules is because they are not stabilized, we are not 100% confident in the design and we want to be able to perform breaking changes without respecting SemVer.
-
-This includes renaming artifactIDs, classes, methods, and reworking their usage according to user feedback and development progress.
+This means an experimental module can still rename artifact IDs, classes, and
+methods, or rework its usage model, when that leads to a better stable API.
 
 <!--
 ```java
-//DEPS run.endive:docs-lib:999-SNAPSHOT
+//DEPS uk.shusek.krwa:docs-lib:0.3.0-SNAPSHOT
 
 docs.FileOps.writeResult("docs/experimental", "why.md.result", "empty");
 ```

@@ -1,1 +1,1 @@
-Hello, Endive!
+Hello, Kotlin Runtime Web Assembly!

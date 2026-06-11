@@ -1,7 +1,7 @@
-endive:
-  label: Endive
-  permalink: /endive
-  description: Endive tag description
+krwa:
+  label: Kotlin Runtime Web Assembly
+  permalink: /krwa
+  description: Kotlin Runtime Web Assembly tag description
 
 chicory:
   label: Chicory
@@ -31,7 +31,7 @@ release:
 redline:
   label: Redline
   permalink: /redline
-  description: Endive Redline
+  description: Kotlin Runtime Web Assembly Redline
 
 highlight:
   label: Syntax Highlight

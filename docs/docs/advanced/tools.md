@@ -7,13 +7,13 @@ title: WABT
 
 ## WebAssembly Binary Toolkit
 
-Since we use them in the build of the project, we publish a few [wabt](https://github.com/WebAssembly/wabt) tools compiled at build time with Endive.
+Since we use them in the build of the project, we publish a few [wabt](https://github.com/WebAssembly/wabt) tools compiled at build time with Kotlin Runtime Web Assembly.
 Adding support for more tools is easy and we welcome contributions in this direction.
 The relevant module can be added to the build with:
 
 ```xml
 <dependency>
-  <groupId>run.endive</groupId>
+  <groupId>uk.shusek.krwa</groupId>
   <artifactId>wabt</artifactId>
   <version>latest-release</version>
 </dependency>
@@ -21,12 +21,12 @@ The relevant module can be added to the build with:
 
 ## Wasm Tools
 
-As we need it to catch up with the latest development of the Wasm spec we publish a few [wasm-tools](https://github.com/bytecodealliance/wasm-tools) compiled at build time with Endive.
+As we need it to catch up with the latest development of the Wasm spec we publish a few [wasm-tools](https://github.com/bytecodealliance/wasm-tools) compiled at build time with Kotlin Runtime Web Assembly.
 The relevant module can be added to the build with:
 
 ```xml
 <dependency>
-  <groupId>run.endive</groupId>
+  <groupId>uk.shusek.krwa</groupId>
   <artifactId>wasm-tools</artifactId>
   <version>latest-release</version>
 </dependency>
@@ -34,12 +34,12 @@ The relevant module can be added to the build with:
 
 <!--
 ```java
-//DEPS run.endive:docs-lib:999-SNAPSHOT
-//DEPS run.endive:wabt:999-SNAPSHOT
-//DEPS run.endive:wasm-tools:999-SNAPSHOT
+//DEPS uk.shusek.krwa:docs-lib:0.3.0-SNAPSHOT
+//DEPS uk.shusek.krwa:wabt:0.3.0-SNAPSHOT
+//DEPS uk.shusek.krwa:wasm-tools:0.3.0-SNAPSHOT
 
-import run.endive.wasm.Parser;
-import run.endive.runtime.Instance;
+import uk.shusek.krwa.wasm.Parser;
+import uk.shusek.krwa.runtime.Instance;
 
 System.setOut(new PrintStream(
   new BufferedOutputStream(
@@ -49,13 +49,13 @@ System.setOut(new PrintStream(
 
 ## wat2wasm
 
-In Endive, we don't have a Wasm text format parser just yet.
+In Kotlin Runtime Web Assembly, we don't have a Wasm text format parser just yet.
 To overcome this limitation you can use `wat2wasm`, for example:
 
 ```java
-import run.endive.wabt.Wat2Wasm;
+import uk.shusek.krwa.wabt.Wat2Wasm;
 // or
-import run.endive.tools.wasm.Wat2Wasm;
+import uk.shusek.krwa.tools.wasm.Wat2Wasm;
 
 var wasm = Wat2Wasm.parse(
     "(module (func (export \"add\") (param $x i32) (param $y i32) (result i32)"

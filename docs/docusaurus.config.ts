@@ -3,22 +3,22 @@ import type { Config } from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
 
 const config: Config = {
-  title: 'Endive',
-  tagline: 'Endive, a JVM native WebAssembly runtime',
-  favicon: 'img/favicon.ico',
+  title: 'Kotlin Runtime Web Assembly',
+  tagline: 'Kotlin Runtime Web Assembly, a JVM native WebAssembly runtime',
 
   // Set the production url of your site here
-  url: 'https://endive.run',
+  url: 'https://shusek.github.io',
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
-  baseUrl: '/',
+  baseUrl: '/kotlin-runtime-web-assembly/',
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
-  organizationName: 'bytecodealliance', // Usually your GitHub org/user name.
-  projectName: 'endive', // Usually your repo name.
+  organizationName: 'Shusek', // Usually your GitHub org/user name.
+  projectName: 'kotlin-runtime-web-assembly', // Usually your repo name.
 
-  onBrokenLinks: 'warn', // TODO: fixme when everything is ready: 'throw',
+  // Keep this as warn while migration pages and redirects are still being consolidated.
+  onBrokenLinks: 'warn',
   onBrokenMarkdownLinks: 'warn',
 
   // Even if you don't use internationalization, you can use this field to set
@@ -124,15 +124,8 @@ const config: Config = {
   ],
 
   themeConfig: {
-    // Replace with your project's social card
-    image: 'img/endive.png',
     navbar: {
-      title: 'Endive',
-      logo: {
-        alt: 'Endive Logo',
-        src: 'img/endive.png',
-        srcDark: 'img/endive-dark.png',
-      },
+      title: 'Kotlin Runtime Web Assembly',
       items: [
         {
           type: 'docSidebar',
@@ -142,7 +135,7 @@ const config: Config = {
         },
         { to: '/blog', label: 'Blog', position: 'left' },
         {
-          href: 'https://github.com/bytecodealliance/endive',
+          href: 'https://github.com/Shusek/kotlin-runtime-web-assembly',
           label: 'GitHub',
           position: 'right',
         },
@@ -161,15 +154,6 @@ const config: Config = {
           ],
         },
         {
-          title: 'Community',
-          items: [
-            {
-              label: 'Zulip',
-              href: 'https://bytecodealliance.zulipchat.com/#narrow/stream/endive',
-            },
-          ],
-        },
-        {
           title: 'More',
           items: [
             {
@@ -178,12 +162,12 @@ const config: Config = {
             },
             {
               label: 'GitHub',
-              href: 'https://github.com/bytecodealliance/endive',
+              href: 'https://github.com/Shusek/kotlin-runtime-web-assembly',
             },
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} Bytecode Alliance. Built with Docusaurus.`,
+      copyright: `Copyright © ${new Date().getFullYear()} Shusek. Built with Docusaurus.`,
     },
     prism: {
       theme: prismThemes.github,

@@ -27,16 +27,21 @@ describe("ApprovalTests", () => {
   });
 
   it.each(markdownFiles)('test %s', (f) => {
+    const resultFile = f + ".result";
+    if (fs.existsSync(resultFile)) {
+      fs.unlinkSync(resultFile);
+    }
+
     const jbangExec = jbang.exec(f);
     expect(jbangExec.exitCode).toBe(0);
     if (jbangExec.stderr.toLowerCase().includes("error")) {
         throw jbangExec.stderr;
     }
 
-    if (!fs.existsSync(f + ".result")) {
-      throw "Result file not found: " + f + ".result";
+    if (!fs.existsSync(resultFile)) {
+      throw "Result file not found: " + resultFile;
     }
-    const result = fs.readFileSync(f + ".result").toString();
+    const result = fs.readFileSync(resultFile).toString();
     approvals.verify(path.join(__dirname, "approvals"), f.replace(/\\/g, "-").replace(/\//g, "-"), result);
   });
 });

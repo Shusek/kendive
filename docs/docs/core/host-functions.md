@@ -12,7 +12,7 @@ Host functions cross the sandbox boundary. Validate all arguments received from 
 In Wasm, the instance of a module is generally regarded as the **guest**,
 and the surrounding runtime environment is called the **host**.
 
-For example, an **application** using Endive as a **library** would be the **host**
+For example, an **application** using Kotlin Runtime Web Assembly as a **library** would be the **host**
 to a Wasm module **guest** you have instantiated.
 
 Wasm modules may **export** functions, so that they can be externally invoked.
@@ -46,13 +46,13 @@ and determine what they do.
 Let's see it with another example. Download the following Wasm binary:
 
 ```bash
-curl https://raw.githubusercontent.com/bytecodealliance/endive/main/wasm-corpus/src/main/resources/compiled/host-function.wat.wasm > logger.wasm
+curl https://raw.githubusercontent.com/Shusek/kotlin-runtime-web-assembly/main/testing/wasm-corpus/src/main/resources/compiled/host-function.wat.wasm > logger.wasm
 ```
 
 <!--
 ```java
-//DEPS run.endive:docs-lib:999-SNAPSHOT
-//DEPS run.endive:runtime:999-SNAPSHOT
+//DEPS uk.shusek.krwa:docs-lib:0.3.0-SNAPSHOT
+//DEPS uk.shusek.krwa:runtime-jvm:0.3.0-SNAPSHOT
 
 docs.FileOps.copyFromWasmCorpus("host-function.wat.wasm", "logger.wasm");
 ```
@@ -72,16 +72,16 @@ System.setOut(new PrintStream(
 
 
 ```java
-import run.endive.runtime.Instance;
-import run.endive.runtime.HostFunction;
-import run.endive.wasm.types.ValType;
-import run.endive.wasm.types.FunctionType;
+import uk.shusek.krwa.runtime.Instance;
+import uk.shusek.krwa.runtime.HostFunction;
+import uk.shusek.krwa.wasm.types.ValType;
+import uk.shusek.krwa.wasm.types.FunctionType;
 
 var func = new HostFunction(
     "console",
     "log",
     FunctionType.of(
-        List.of(ValType.I32, ValType.I32),
+        List.of(ValType.getI32(), ValType.getI32()),
         List.of()
     ),
     (Instance instance, long... args) -> {
@@ -110,9 +110,9 @@ We now need to pass this host function when we instantiate the module.
 We can do so by using a `Store`:
 
 ```java
-import run.endive.wasm.Parser;
-import run.endive.runtime.ImportValues;
-import run.endive.runtime.Store;
+import uk.shusek.krwa.wasm.Parser;
+import uk.shusek.krwa.runtime.ImportValues;
+import uk.shusek.krwa.runtime.Store;
 
 // instantiate the store
 var store = new Store();

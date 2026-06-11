@@ -14,24 +14,24 @@ In the simplest case, it allows to register single host functions, globals, memo
 
 <!--
 ```java
-//DEPS run.endive:docs-lib:999-SNAPSHOT
-//DEPS run.endive:runtime:999-SNAPSHOT
+//DEPS uk.shusek.krwa:docs-lib:0.3.0-SNAPSHOT
+//DEPS uk.shusek.krwa:runtime-jvm:0.3.0-SNAPSHOT
 ```
 -->
 
 ```java
-import run.endive.wasm.Parser;
-import run.endive.runtime.Instance;
-import run.endive.runtime.HostFunction;
-import run.endive.runtime.Store;
-import run.endive.wasm.types.ValType;
-import run.endive.wasm.types.FunctionType;
+import uk.shusek.krwa.wasm.Parser;
+import uk.shusek.krwa.runtime.Instance;
+import uk.shusek.krwa.runtime.HostFunction;
+import uk.shusek.krwa.runtime.Store;
+import uk.shusek.krwa.wasm.types.ValType;
+import uk.shusek.krwa.wasm.types.FunctionType;
 
 var func = new HostFunction(
     "console",
     "log",
     FunctionType.of(
-        List.of(ValType.I32, ValType.I32),
+        List.of(ValType.getI32(), ValType.getI32()),
         List.of()
     ),
     (Instance instance, long... args) -> { // decompiled is: console_log(13, 0);

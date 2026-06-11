@@ -6,42 +6,47 @@ title: Quick start
 
 ### Install the dependency
 
-To use the runtime, you need to add the `run.endive:runtime` dependency
-to your dependency management system.
+Every push to `main` publishes `0.3.0-SNAPSHOT` artifacts to the public KRWA Maven
+repository:
 
-#### Maven
-
-```xml
-<dependency>
-  <groupId>run.endive</groupId>
-  <artifactId>runtime</artifactId>
-  <version>latest-release</version>
-</dependency>
+```kotlin
+// settings.gradle.kts
+dependencyResolutionManagement {
+    repositories {
+        mavenCentral()
+        maven("https://shusek.github.io/kotlin-runtime-web-assembly/maven")
+    }
+}
 ```
 
-#### Gradle
+Then depend on the runtime module:
 
-```groovy
-implementation 'run.endive:runtime:latest-release'
+```kotlin
+// build.gradle.kts
+val krwaVersion = "0.3.0-SNAPSHOT"
+
+dependencies {
+    implementation("uk.shusek.krwa:runtime:$krwaVersion")
+}
 ```
 
 
 <!--
 ```java
-//DEPS run.endive:docs-lib:999-SNAPSHOT
-//DEPS run.endive:runtime:999-SNAPSHOT
+//DEPS uk.shusek.krwa:docs-lib:0.3.0-SNAPSHOT
+//DEPS uk.shusek.krwa:runtime-jvm:0.3.0-SNAPSHOT
 ```
 -->
 
 ### Loading and Instantiating Wasm Modules
 
-First your Wasm module must be loaded from disk and then instantiated. Let's [download a test module](https://raw.githubusercontent.com/bytecodealliance/endive/main/wasm-corpus/src/main/resources/compiled/iterfact.wat.wasm) .
+First your Wasm module must be loaded from disk and then instantiated. Let's [download a test module](https://raw.githubusercontent.com/Shusek/kotlin-runtime-web-assembly/main/testing/wasm-corpus/src/main/resources/compiled/iterfact.wat.wasm) .
 This module contains some code to compute factorial:
 
 Download from the link or with curl:
 
 ```bash
-curl https://raw.githubusercontent.com/bytecodealliance/endive/main/wasm-corpus/src/main/resources/compiled/iterfact.wat.wasm > factorial.wasm
+curl https://raw.githubusercontent.com/Shusek/kotlin-runtime-web-assembly/main/testing/wasm-corpus/src/main/resources/compiled/iterfact.wat.wasm > factorial.wasm
 ```
 
 <!--
@@ -53,10 +58,10 @@ docs.FileOps.copyFromWasmCorpus("iterfact.wat.wasm", "factorial.wasm");
 Load this module and instantiate it:
 
 ```java
-import run.endive.runtime.ExportFunction;
-import run.endive.wasm.types.Value;
-import run.endive.wasm.Parser;
-import run.endive.runtime.Instance;
+import uk.shusek.krwa.runtime.ExportFunction;
+import uk.shusek.krwa.wasm.types.Value;
+import uk.shusek.krwa.wasm.Parser;
+import uk.shusek.krwa.runtime.Instance;
 import java.io.File;
 
 // point this to your path on disk

@@ -5,8 +5,8 @@ title: Advanced Wasm Memory Customization
 ---
 <!--
 ```java
-//DEPS run.endive:docs-lib:999-SNAPSHOT
-//DEPS run.endive:runtime:999-SNAPSHOT
+//DEPS uk.shusek.krwa:docs-lib:0.3.0-SNAPSHOT
+//DEPS uk.shusek.krwa:runtime-jvm:0.3.0-SNAPSHOT
 
 docs.FileOps.copyFromWasmCorpus("count_vowels.rs.wasm", "count_vowels.rs.wasm");
 
@@ -14,10 +14,10 @@ System.setOut(new PrintStream(
   new BufferedOutputStream(
     new FileOutputStream("docs/examples/rust.md.result"))));
 
-import run.endive.wasm.Parser;
-import run.endive.runtime.Instance;
-import run.endive.runtime.ByteArrayMemory;
-import run.endive.runtime.ByteBufferMemory;
+import uk.shusek.krwa.wasm.Parser;
+import uk.shusek.krwa.runtime.Instance;
+import uk.shusek.krwa.runtime.ByteArrayMemory;
+import uk.shusek.krwa.runtime.ByteBufferMemory;
 
 var module = Parser.parse(new File("count_vowels.rs.wasm"));
 ```
@@ -35,7 +35,7 @@ var instance = Instance.builder(module).withMemoryFactory(limits -> {
     }).build();
 ```
 
-> **NOTE:** Since Endive 1.1.0, an optimized memory implementation called `ByteArrayMemory` is also available. We recommend plugging this  implementation on all recent OpenJDK systems for enhanced performance. On different Java runtimes (in particular, on Android VMs) you should stick to `ByteBufferMemory`.
+> **NOTE:** Since Kotlin Runtime Web Assembly 1.1.0, an optimized memory implementation called `ByteArrayMemory` is also available. We recommend plugging this  implementation on all recent OpenJDK systems for enhanced performance. On different Java runtimes (in particular, on Android VMs) you should stick to `ByteBufferMemory`.
 
 <!--
 ```java

@@ -5,63 +5,104 @@ title: Installation
 ---
 # Installation
 
-Add Endive to your project using Maven or Gradle.
+Every push to `main` publishes the current Kotlin Runtime Web Assembly
+`0.3.0-SNAPSHOT` artifacts to a public GitHub Pages Maven repository. Use snapshots
+for development builds. Use a real release version from Maven Central once a
+release is published.
 
-## Maven
+## Gradle Snapshot
 
-Add the runtime dependency to your `pom.xml`:
+Add the public KRWA Maven repository:
 
-```xml
-<dependency>
-  <groupId>run.endive</groupId>
-  <artifactId>runtime</artifactId>
-  <version>${endive.version}</version>
-</dependency>
+```kotlin
+// settings.gradle.kts
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        mavenCentral()
+        maven("https://shusek.github.io/kotlin-runtime-web-assembly/maven")
+    }
+}
 ```
 
-### Bill of Materials (BOM)
+Then depend on the modules you need:
 
-To keep the versions of different Endive artifacts aligned, use the provided BOM:
+```kotlin
+// build.gradle.kts
+val krwaVersion = "0.3.0-SNAPSHOT"
 
-```xml
-<dependencyManagement>
-    <dependencies>
-        <dependency>
-            <groupId>run.endive</groupId>
-            <artifactId>bom</artifactId>
-            <version>${endive.version}</version>
-            <type>pom</type>
-            <scope>import</scope>
-        </dependency>
-    </dependencies>
-</dependencyManagement>
+dependencies {
+    implementation(platform("uk.shusek.krwa:bom:$krwaVersion"))
+    implementation("uk.shusek.krwa:runtime")
+    implementation("uk.shusek.krwa:wasm")
+    implementation("uk.shusek.krwa:wasi")
+    implementation("uk.shusek.krwa:component-model")
+}
 ```
 
-Then you can use any Endive dependency without declaring the version:
+## Gradle Composite Build
 
-```xml
-<dependency>
-  <groupId>run.endive</groupId>
-  <artifactId>runtime</artifactId>
-</dependency>
+For local KRWA changes that are not committed yet, keep KRWA checked out next to
+your application and point Gradle at that checkout:
+
+```kotlin
+// settings.gradle.kts
+includeBuild("../kotlin-runtime-web-assembly")
 ```
 
-## Gradle
+```kotlin
+// build.gradle.kts
+val krwaVersion = "0.3.0-SNAPSHOT"
 
-```groovy
-implementation 'run.endive:runtime:${endiveVersion}'
+dependencies {
+    implementation("uk.shusek.krwa:runtime:$krwaVersion")
+    implementation("uk.shusek.krwa:wasm:$krwaVersion")
+    implementation("uk.shusek.krwa:wasi:$krwaVersion")
+    implementation("uk.shusek.krwa:component-model:$krwaVersion")
+}
 ```
 
-Or with the BOM:
+Adjust the `includeBuild` path to your local checkout.
 
-```groovy
-implementation platform('run.endive:bom:${endiveVersion}')
-implementation 'run.endive:runtime'
+## Local Gradle Publish
+
+Publish an uncommitted checkout to your local Gradle dependency repository:
+
+```shell
+git clone https://github.com/Shusek/kotlin-runtime-web-assembly.git
+cd kotlin-runtime-web-assembly
+./gradlew publishToMavenLocal
 ```
+
+Then use the local snapshot from Gradle:
+
+```kotlin
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+val krwaVersion = "0.3.0-SNAPSHOT"
+
+dependencies {
+    implementation(platform("uk.shusek.krwa:bom:$krwaVersion"))
+    implementation("uk.shusek.krwa:runtime")
+    implementation("uk.shusek.krwa:wasm")
+    implementation("uk.shusek.krwa:wasi")
+    implementation("uk.shusek.krwa:component-model")
+}
+```
+
+## Public Releases
+
+For public releases, use a real released version from Maven Central instead of
+`0.3.0-SNAPSHOT`, and do not enable the snapshot or `mavenLocal()`
+repositories unless you intentionally want snapshots to override published
+artifacts.
 
 <!--
 ```java
-//DEPS run.endive:docs-lib:999-SNAPSHOT
+//DEPS uk.shusek.krwa:docs-lib:0.3.0-SNAPSHOT
 
 docs.FileOps.writeResult("docs/getting-started", "installation.md.result", "empty");
 ```

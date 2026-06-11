@@ -2,7 +2,7 @@
 slug: finding-a-jvm-jit-bug-the-hard-way
 title: 'Finding a JVM JIT Bug the Hard Way'
 authors: [andreaTP]
-tags: [endive, wasm, bug, jvm]
+tags: [krwa, wasm, bug, jvm]
 ---
 
 ![Finding a JVM JIT Bug](finding-a-jvm-jit-bug.png)
@@ -169,4 +169,4 @@ In the meantime, the workaround protects all users automatically on affected JDK
 
 **Open source ecosystems work.** A user reported the bug, we investigated and built workarounds, [David Lloyd](https://github.com/dmlloyd) helped file the upstream issue, and Roland Westrelin diagnosed the C2 root cause and wrote the fix. This chain from user report to compiler fix only works because the code is open and the communities are connected.
 
-If you care about Java, WebAssembly, and the future of really portable software, [come build with us](https://github.com/bytecodealliance/endive).
+If you care about Java, WebAssembly, and the future of really portable software, [come build with us](https://github.com/Shusek/kotlin-runtime-web-assembly).

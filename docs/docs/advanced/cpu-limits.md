@@ -11,20 +11,20 @@ Wasm modules can contain infinite loops. When running untrusted code, always set
 
 Often, when running untrusted user code in our infrastructure, we want to have strong guarantees around the termination of the program.
 
-To achieve this result there are, currently, two mechanisms in Endive:
+To achieve this result there are, currently, two mechanisms in Kotlin Runtime Web Assembly:
 
 ## Interrupts
 
-Wasm modules executed using Endive honour the carrier thread interruption mechanism, thus you can leverage it to implement absolute timeouts:
+Wasm modules executed using Kotlin Runtime Web Assembly honour the carrier thread interruption mechanism, thus you can leverage it to implement absolute timeouts:
 
 ```bash
-curl https://raw.githubusercontent.com/bytecodealliance/endive/main/wasm-corpus/src/main/resources/compiled/infinite-loop.c.wasm > infinite-loop.wasm
+curl https://raw.githubusercontent.com/Shusek/kotlin-runtime-web-assembly/main/testing/wasm-corpus/src/main/resources/compiled/infinite-loop.c.wasm > infinite-loop.wasm
 ```
 
 <!--
 ```java
-//DEPS run.endive:docs-lib:999-SNAPSHOT
-//DEPS run.endive:runtime:999-SNAPSHOT
+//DEPS uk.shusek.krwa:docs-lib:0.3.0-SNAPSHOT
+//DEPS uk.shusek.krwa:runtime-jvm:0.3.0-SNAPSHOT
 
 docs.FileOps.copyFromWasmCorpus("infinite-loop.c.wasm", "infinite-loop.wasm");
 ```
@@ -33,9 +33,9 @@ docs.FileOps.copyFromWasmCorpus("infinite-loop.c.wasm", "infinite-loop.wasm");
 Build and instantiate this infinite loop module:
 
 ```java
-import run.endive.runtime.ExportFunction;
-import run.endive.runtime.Instance;
-import run.endive.wasm.Parser;
+import uk.shusek.krwa.runtime.ExportFunction;
+import uk.shusek.krwa.runtime.Instance;
+import uk.shusek.krwa.wasm.Parser;
 
 Instance instance = Instance.builder(Parser.parse(new File("./infinite-loop.wasm"))).build();
 ExportFunction function = instance.export("run");
@@ -73,7 +73,7 @@ try {
 
 ## [unsafe] Execution Listener
 
-The Endive interpreter exposes an unsafe listener to granularly control the Wasm Modules execution.
+The Kotlin Runtime Web Assembly interpreter exposes an unsafe listener to granularly control the Wasm Modules execution.
 Using it is extremely risky as the code will be evaluated for each and every Wasm instruction, use it with extreme caution.
 
 ```java

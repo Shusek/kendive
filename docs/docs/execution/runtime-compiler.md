@@ -26,15 +26,14 @@ is usually worth it.  Use [Build Time Compilation](./build-time-compiler.md) if 
 
 ## Using
 
-### Required Maven Changes
+### Required Gradle Changes
 
 Add the following dependency:
 
-```xml
-<dependency>
-  <groupId>run.endive</groupId>
-  <artifactId>compiler</artifactId>
-</dependency>
+```kotlin
+dependencies {
+    implementation("uk.shusek.krwa:compiler")
+}
 ```
 
 ### Code Changes
@@ -44,19 +43,19 @@ of the default `InterpreterMachine`.
 
 <!--
 ```java
-//DEPS run.endive:docs-lib:999-SNAPSHOT
-//DEPS run.endive:compiler:999-SNAPSHOT
+//DEPS uk.shusek.krwa:docs-lib:0.3.0-SNAPSHOT
+//DEPS uk.shusek.krwa:compiler:0.3.0-SNAPSHOT
 
-import run.endive.wasm.Parser;
-import run.endive.runtime.Instance;
+import uk.shusek.krwa.wasm.Parser;
+import uk.shusek.krwa.runtime.Instance;
 docs.FileOps.copyFromWasmCorpus("count_vowels.rs.wasm", "your.wasm");
 ```
 -->
 
 ```java
-import run.endive.compiler.MachineFactoryCompiler;
-import run.endive.wasm.Parser;
-import run.endive.wasm.WasmModule;
+import uk.shusek.krwa.compiler.MachineFactoryCompiler;
+import uk.shusek.krwa.wasm.Parser;
+import uk.shusek.krwa.wasm.WasmModule;
 
 var module = Parser.parse(new File("your.wasm"));
 var instance = Instance.builder(module).
@@ -77,11 +76,11 @@ Warning: using interpreted mode for WASM function index: 232
 By default, the compiler uses `InterpreterFallback.WARN` behavior, which logs warning messages when falling back to the interpreter. If you are happy with these methods being interpreted, you can configure the compiler with `InterpreterFallback.SILENT` to silence those messages:
 
 ```java
-import run.endive.compiler.MachineFactoryCompiler;
-import run.endive.compiler.InterpreterFallback;
-import run.endive.runtime.Instance;
-import run.endive.wasm.Parser;
-import run.endive.wasm.WasmModule;
+import uk.shusek.krwa.compiler.MachineFactoryCompiler;
+import uk.shusek.krwa.compiler.InterpreterFallback;
+import uk.shusek.krwa.runtime.Instance;
+import uk.shusek.krwa.wasm.Parser;
+import uk.shusek.krwa.wasm.WasmModule;
 
 var module = Parser.parse(new File("your.wasm"));
 var instance = Instance.builder(module).
@@ -98,11 +97,11 @@ If you want to ensure the functions are never interpreted, you can modify the ab
 An even better way to silence the use of interpreted functions (this will speed up your compile times) is to explicitly list the function indexes that should be interpreted:
 
 ```java
-import run.endive.compiler.MachineFactoryCompiler;
-import run.endive.compiler.InterpreterFallback;
-import run.endive.runtime.Instance;
-import run.endive.wasm.Parser;
-import run.endive.wasm.WasmModule;
+import uk.shusek.krwa.compiler.MachineFactoryCompiler;
+import uk.shusek.krwa.compiler.InterpreterFallback;
+import uk.shusek.krwa.runtime.Instance;
+import uk.shusek.krwa.wasm.Parser;
+import uk.shusek.krwa.wasm.WasmModule;
 import java.io.File;
 import java.util.Set;
 
